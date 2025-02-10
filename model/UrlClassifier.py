@@ -10,8 +10,8 @@ class UrlClassifier:
         "SVM": 'modelo_SVM1'
     }
 
-    df_classification = pd.read_csv('https://raw.githubusercontent.com/JorgeQuille/test-verify-url/main/classification.csv') 
-    
+    df_classification = pd.read_csv('https://raw.githubusercontent.com/mpjuarez/Frontal_IA/main/classification.csv') 
+                                   
     def __init__(self):
         with open('vectorizer_param.pkl', 'rb') as f:
             self.vectorizer = pickle.load(f)
