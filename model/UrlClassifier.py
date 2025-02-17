@@ -1,6 +1,8 @@
 import pickle
 import re
 import pandas as pd
+import numpy as np
+ 
 
 class UrlClassifier:
 
@@ -34,7 +36,12 @@ class UrlClassifier:
         url = self.normalize_url(url)
         url_vectorizada = self.vectorizer.transform([url])
         prediction = self.model.predict(url_vectorizada)
-        probability = self.model.predict_proba(url_vectorizada)[0][1] * 100
+        probability = self.model.predict_proba(url_vectorizada)
+ 
+        if probability.shape[1] == 2:  # Clasificación binaria
+            probability = probability[:, 1] * 100  # Probabilidad de la clase positiva
+        else:  # Clasificación multiclase
+            probability = np.max(probability, axis=1) * 100
         category = self.df_classification.loc[self.df_classification['num_type'] == prediction[0], 'type']
         if not category.empty:
             category = f"{prediction} {category.values[0]}"
@@ -53,7 +60,10 @@ class UrlClassifier:
         prediction = self.model.predict(url_vectorizada)  # Devuelve la clase predicha
 
         df['prediccion'] = prediction
-        df['probabilidad'] = probability[:, 1] * 100
+        if probability.shape[1] == 2:  # Clasificación binaria
+            df['probabilidad'] = probability[:, 1] * 100
+        else:  # Clasificación multiclase
+            df['probabilidad'] = np.max(probability, axis=1) * 100
 
         df = df.merge(self.df_classification,
                     left_on='prediccion',  # Columna de predicción en el DataFrame original

@@ -75,7 +75,7 @@ def view_interface():
         if st.button("Predecir", key= "btn_input"):
             prediction, probability = urlClassifier.predic(url, model_name)
             st.write(f"Predicción: {prediction}")
-            st.write(f"Probabilidad: {probability:.2f} %")
+            st.write(f"Probabilidad: {probability[0]:.2f} %")
 
     st.write("**************************")
     uploaded_file = st.file_uploader("Elige un archivo CSV", type="csv")
